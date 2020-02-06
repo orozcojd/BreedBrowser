@@ -3,6 +3,7 @@
     <h3>Sub-breeds</h3>
     <ul>
       <li
+        @click="emitImgReq($event, breed)"
         v-for="(breed, i) in subBreeds"
         :key="i"
       >
@@ -21,12 +22,15 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-    }
-  },
   methods: {
-
+    emitImgReq (e, breed) {
+      const elm = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.firstElementChild.nextElementSibling
+      const payload = {
+        node: elm,
+        breed
+      }
+      this.$emit('sub-breed', payload)
+    }
   }
 }
 </script>
@@ -37,12 +41,19 @@ export default {
   }
   .container ul {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     padding-left: 0;
   }
   .container ul li {
     list-style-type: none;
     margin: 10px 10px;
-    flex-grow: 1;
+    background:#CEDEEA;
+    padding: .2em .5em;
+    border-radius:.5em;
+    cursor: pointer;
+  }
+  .container ul li:hover {
+    background: #ffffff;
   }
 </style>

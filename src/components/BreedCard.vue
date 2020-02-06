@@ -2,13 +2,13 @@
   <div class="breed-card">
     <transition name="overlay">
       <div
-        v-if="!img.length"
+        v-if="loading"
         class="overlay"
         :style="loadingColor"
       />
     </transition>
     <div
-      @click="newImg()"
+      @click="newImg"
       class="breed-img"
     >
       <img
@@ -17,6 +17,7 @@
         loading="lazy"
       >
     </div>
+    <div class="breed-img--loader"></div>
     <div class="breed-card__description">
       <h2>{{ breed }}</h2>
       <div v-if="subBreeds.length">
@@ -38,6 +39,7 @@
         <breed-card-details
           :subBreeds="subBreeds"
           v-if="expandCard"
+          @sub-breed="fetchSubBreedImg"
         />
       </div>
     </div>
@@ -82,7 +84,8 @@ export default {
     return {
       img: '',
       loading: true,
-      expandCard: false
+      expandCard: false,
+      imgLoading: false
     }
   },
   async mounted () {
@@ -93,12 +96,54 @@ export default {
     async fetchBreedImg () {
       const { data } = await ApiService().get(`/breed/${this.breed}/images/random`)
       this.img = data.message
+      this.imgLoading = false
     },
-    newImg () {
-      this.fetchBreedImg()
+    async newImg (e) {
+      this.imgLoading = true
+      this.loadBar(e.target)
+      await this.fetchBreedImg()
     },
     newColor () {
       return Math.floor(Math.random() * 9999999).toString(16)
+    },
+    async fetchSubBreedImg (event) {
+      this.imgLoading = true
+      this.loadBar(null, event.node)
+      const { data } = await ApiService().get(`/breed/${this.breed}/${event.breed}/images/random`)
+      this.img = data.message
+      this.imgLoading = false
+    },
+    /*
+     * starts loading bar incrementing in intervals
+     */
+    loadBar (e, domNode) {
+      let elm
+      if (domNode) elm = domNode
+      else { elm = e.parentNode.nextElementSibling }
+      elm.style.display = 'block'
+      let width = 0
+      let id = setInterval(f, 20)
+      let vm = this
+      function f () {
+        if (width >= 97 && vm.imgLoading) {
+          width = 97
+          elm.style.width = width
+        }
+        if (width >= 80 && vm.imgLoading) {
+          width += 0.2
+          elm.style.width = width
+        }
+        if (width >= 100 || !vm.imgLoading) {
+          elm.style.width = '100%'
+          setTimeout(() => {
+            elm.style.display = 'none'
+          }, 500)
+          clearInterval(id)
+        } else {
+          width++
+          elm.style.width = width + '%'
+        }
+      }
     }
   }
 }
@@ -115,7 +160,7 @@ export default {
     word-break: break-all;
   }
   .breed-card__description {
-    padding: 0 2em 2em 2em;
+    padding: 0 1em 2em 1em;
   }
   .breed-card--expand {
     margin: auto;
@@ -138,6 +183,11 @@ export default {
   }
   .breed-img {
     height: 200px;
+  }
+  .breed-img--loader {
+    border: 2px solid#CEDEEA;
+    width: 0;
+    display: none;
   }
   .breed-img img {
     width: 100%;
