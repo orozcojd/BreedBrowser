@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h3>Sub Breeds</h3>
+    <h3>Sub-breeds</h3>
     <ul>
       <li
         v-for="(breed, i) in subBreeds"

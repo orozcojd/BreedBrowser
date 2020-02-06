@@ -49,4 +49,10 @@ export default {
   .title {
     margin-left: 1em;
   }
+
+  @media all and (max-width: 743px) {
+    .container {
+      padding: .5em;
+    }
+  }
 </style>

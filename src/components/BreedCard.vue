@@ -155,4 +155,9 @@ export default {
   .overlay-enter, .overlay-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
   }
+  @media all and (max-width: 600px) {
+    .breed-card {
+      width: 100%;
+    }
+  }
 </style>
