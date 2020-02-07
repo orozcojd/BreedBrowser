@@ -7,13 +7,17 @@
       <label for="breed-search">Search</label>
       <input
         v-model="breedComputed"
-        type="text"
+        type="search"
         name="breed-search"
         placeholder="Dog Breed..."
         id="breed-search"
       >
     </div>
-    <div class="container--flex">
+    <div
+      v-if="breeds.length && filterBreeds.length"
+      key="filteredBreeds"
+      class="container--flex"
+    >
       <breed-card
         v-for="breed in filterBreeds"
         :key="breed.id"
@@ -21,6 +25,13 @@
         :sub-breeds="breed.subBreeds"
       >
       </breed-card>
+    </div>
+    <div
+    class="container"
+      v-else-if="loaded && !filterBreeds.length"
+      key="noResults"
+    >
+    <h1>Try refining your search...</h1>
     </div>
   </div>
 </template>
@@ -36,6 +47,7 @@ export default {
   },
   data () {
     return {
+      loaded: false,
       breedInfo: '',
       dbBreedInfo: ''
     }
@@ -45,8 +57,8 @@ export default {
     filterBreeds () {
       if (this.breeds.length) {
         return this.breeds.filter(b =>
-          b.type.includes(this.breedComputed) ||
-          b.subBreeds.find(sb => sb.includes(this.breedComputed))
+          b.type.includes(this.breedComputed.toLowerCase()) ||
+          b.subBreeds.find(sb => sb.includes(this.breedComputed.toLowerCase()))
         )
       }
     },
@@ -61,6 +73,7 @@ export default {
   },
   async mounted () {
     await this.fetchBreeds()
+    this.loaded = true
   },
   methods: {
     ...mapActions(['fetchBreeds']),
@@ -72,7 +85,7 @@ export default {
   .container {
     padding: 2em;
   }
-  input[type="text"] {
+  input[type="search"] {
     padding:1em 1em;
     width: 300px;
     border: 2px solid#E7F1E9;
@@ -99,7 +112,7 @@ export default {
       font-size: 1em;
     }
     input[type="text"] {
-      width: 100%;
+      width: 90%;
     }
   }
 </style>
