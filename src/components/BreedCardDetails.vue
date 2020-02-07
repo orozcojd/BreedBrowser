@@ -3,7 +3,7 @@
     <h3>Sub-breeds</h3>
     <ul>
       <li
-        @click="emitImgReq($event, breed)"
+        @click="$emit('sub-breed', breed)"
         v-for="(breed, i) in subBreeds"
         :key="i"
       >
@@ -20,16 +20,6 @@ export default {
     subBreeds: {
       type: Array,
       required: true
-    }
-  },
-  methods: {
-    emitImgReq (e, breed) {
-      const elm = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.firstElementChild.nextElementSibling
-      const payload = {
-        node: elm,
-        breed
-      }
-      this.$emit('sub-breed', payload)
     }
   }
 }

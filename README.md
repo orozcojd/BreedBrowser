@@ -1,6 +1,10 @@
 # client
 
-> A Vue.js project
+> A Vue.js application made for dog lovers.
+
+This application is powered by [Dog API](https://dog.ceo/dog-api/)
+
+To view live example, visit my [Netlify App](https://stupefied-mclean-fe9d56.netlify.com/#/)
 
 ## Build Setup
 

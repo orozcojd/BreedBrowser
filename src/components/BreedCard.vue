@@ -17,7 +17,7 @@
         loading="lazy"
       >
     </div>
-    <div class="breed-img--loader"></div>
+    <div ref="img__loader" class="breed-img--loader"></div>
     <div class="breed-card__description">
       <h2>{{ breed }}</h2>
       <div v-if="subBreeds.length">
@@ -88,7 +88,7 @@ export default {
       imgLoading: false
     }
   },
-  async mounted () {
+  async created () {
     await this.fetchBreedImg()
     this.loading = false
   },
@@ -98,18 +98,18 @@ export default {
       this.img = data.message
       this.imgLoading = false
     },
-    async newImg (e) {
+    async newImg () {
       this.imgLoading = true
-      this.loadBar(e.target)
+      this.loadBar(this.$refs.img__loader)
       await this.fetchBreedImg()
     },
     newColor () {
       return Math.floor(Math.random() * 9999999).toString(16)
     },
-    async fetchSubBreedImg (event) {
+    async fetchSubBreedImg (breed) {
       this.imgLoading = true
-      this.loadBar(null, event.node)
-      const { data } = await ApiService().get(`/breed/${this.breed}/${event.breed}/images/random`)
+      this.loadBar(this.$refs.img__loader)
+      const { data } = await ApiService().get(`/breed/${this.breed}/${breed}/images/random`)
       this.img = data.message
       this.imgLoading = false
     },
@@ -119,7 +119,7 @@ export default {
     loadBar (e, domNode) {
       let elm
       if (domNode) elm = domNode
-      else { elm = e.parentNode.nextElementSibling }
+      else { elm = e }
       elm.style.display = 'block'
       let width = 0
       let id = setInterval(f, 20)
