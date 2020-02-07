@@ -74,10 +74,11 @@ export default {
   }
   input[type="text"] {
     padding:1em 1em;
-    width: 20%;
+    width: 300px;
     border: 2px solid#E7F1E9;
     font-size:.8em;
     border-radius:5px;
+    margin-top: 1em;
   }
   .container--flex {
     display: flex;
@@ -91,6 +92,14 @@ export default {
   @media all and (max-width: 743px) {
     .container {
       padding: .5em;
+    }
+  }
+  @media all and (max-width: 300px) {
+    h1 {
+      font-size: 1em;
+    }
+    input[type="text"] {
+      width: 100%;
     }
   }
 </style>
